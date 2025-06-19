@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "jazzmin",
     "rest_framework",
-    "rest_framework_simplejwt.token_blaklist",
+    'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
