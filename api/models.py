@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from core.models import CustomUser, Profile
 
 class Teacher(models.Model):
@@ -24,3 +25,22 @@ class Teacher(models.Model):
     def review(self):
         return Course.objects.filter(teacher=self)
     
+class Category(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.FieldFile(uploadto_to="course-file", blank=True, null=True, default="category.jpg")
+    slug = models.SlugField(unique=True)
+    
+    class Meta:
+        verbose_name_plural = "Category"
+        ordering = ["title"]
+        
+    def __str__(self):
+        return self.title
+    
+    def course_count(self):
+        return Course.objects.filter(category=self).count()
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
