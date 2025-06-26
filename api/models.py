@@ -17,5 +17,10 @@ class Teacher(models.Model):
     
     def students(self):
         return CartOrderItem.objects.filter(teacher=self)
+    
     def courses(self):
         return Course.objects.filter(teacher=self)
+    
+    def review(self):
+        return Course.objects.filter(teacher=self)
+    
