@@ -80,7 +80,7 @@ class Course(models.Model):
     file = models.FileField(upload_to="course-file", blank=True, null=True)
     image = models.FileField(upload_to="course-file", blank=True, null=True)
     title = models.CharField(max_length=200)
-    description = models.TextChoices(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     language = models.CharField(choices=LANGUAGE, default="English")
     level = models.CharField(choices=LEVEL, default="Beginner")
@@ -97,7 +97,7 @@ class Course(models.Model):
     def save(self, *args, **kwargs):
         if self.slug == "" or self.slug == None:
             self.slug = slugify(self.title)
-        super(Category, self).save(*args, **kwargs)
+        super(Course, self).save(*args, **kwargs)
         
     def students(self):
         return EnrolledCourse.objects.filter(course=self)
@@ -126,3 +126,6 @@ class Variant(models.Model):
     
     def __str__(self):
         return self.title
+    
+    def variant_items(self):
+        return VariantItem.objects.filter(variant=self)
