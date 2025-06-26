@@ -161,3 +161,20 @@ class VariantItem(models.Model):
             duration_text = f"{minutes}m {seconds}s"
             self.content_duration = duration_text
             super().save(update_fields=['content_duration'])
+            
+class Question_Answer(models.Model):
+    course = models.ForeignKey("Course", on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=1000, null=True, blank=True)
+    qa_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    is_answered = models.BooleanField(default=False)
+    date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-date']
+        
+    def messages(self):
+        return Question_Answer_Message.objects.filter(question=self)
+    
+    def profile(self):
+        return Profile.objects.get(user=self.user)
