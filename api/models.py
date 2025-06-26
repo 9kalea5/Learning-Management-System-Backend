@@ -1,8 +1,10 @@
+import math
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from core.models import CustomUser, Profile
 from shortuuid.django_fields import ShortUUIDField
+from moviepy.editor import VideoFileClip
 
 LANGUAGE= (
     ("English", "English"),
@@ -129,3 +131,33 @@ class Variant(models.Model):
     
     def variant_items(self):
         return VariantItem.objects.filter(variant=self)
+    
+class VariantItem(models.Model):
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name="variant_items")
+    title = models.CharField(max_length=1000)
+    description = models.TextField(null=True, blank=True)
+    file = models.FileField(upload_to="course-file")
+    duration = models.DurationField(null=True, blank=True)
+    content_duration = models.DurationField(max_length=1000, null=True, blank=True)
+    preview = models.BooleanField(default=False)
+    variant_item_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.variant.title} - {self.title}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        
+        if self.file:
+            clip = VideoFileClip(self.file)
+            duration_seconds = clip.duration
+            
+            minutes, remainder = divmod(duration_seconds, 60)
+            
+            minutes = math.floor(minutes)
+            seconds = math.floor(remainder)
+            
+            duration_text = f"{minutes}m {seconds}s"
+            self.content_duration = duration_text
+            super().save(update_fields=['content_duration'])
