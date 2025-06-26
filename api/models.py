@@ -117,3 +117,12 @@ class Course(models.Model):
     
     def reviews(self):
         return Review.objects.filter(course=self, active=True)
+    
+class Variant(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+    variant_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.title
