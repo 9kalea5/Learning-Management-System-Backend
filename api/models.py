@@ -163,8 +163,8 @@ class VariantItem(models.Model):
             super().save(update_fields=['content_duration'])
             
 class Question_Answer(models.Model):
-    course = models.ForeignKey("Course", on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=1000, null=True, blank=True)
     qa_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
     is_answered = models.BooleanField(default=False)
@@ -178,3 +178,17 @@ class Question_Answer(models.Model):
     
     def profile(self):
         return Profile.objects.get(user=self.user)
+    
+class Question_Answer_Message(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question_Answer, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    message = models.TextField(null=True, blank=True)
+    qam_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    qa_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.course.title}"
+
+    class Meta:
+        ordering = ['-date']
