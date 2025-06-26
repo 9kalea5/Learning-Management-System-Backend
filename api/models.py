@@ -192,3 +192,6 @@ class Question_Answer_Message(models.Model):
 
     class Meta:
         ordering = ['-date']
+    
+    def profile(self):
+        return Profile.objects.get(user=self.user)
