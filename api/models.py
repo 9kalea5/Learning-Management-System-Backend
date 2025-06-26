@@ -1,6 +1,35 @@
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from core.models import CustomUser, Profile
+from shortuuid.django_fields import ShortUUIDField
+
+LANGUAGE= (
+    ("English", "English"),
+    ("Spanish", "Spanish"),
+    ("French", "French"),
+)
+
+LEVEL = (
+    ("Beginner", "Beginner"),
+    ("Intermediate", "Intermediate"),
+    ("Advanced", "Advanced"),
+)
+
+TEACHER_STATUS = (
+    ("Draft", "Draft"),
+    ("Disabled", "Disabled"),
+    ("Published", "Published"),
+)
+
+PLATFORM_STATUS = (
+    ("Review", "Review"),
+    ("Disabled", "Disabled"),
+    ("Rejected", "Rejected"),
+    ("Draft", "Draft"),
+    ("Published", "Published"),
+    
+)
 
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -39,6 +68,31 @@ class Category(models.Model):
     
     def course_count(self):
         return Course.objects.filter(category=self).count()
+    
+    def save(self, *args, **kwargs):
+        if self.slug == "" or self.slug == None:
+            self.slug = slugify(self.title)
+        super(Category, self).save(*args, **kwargs)
+        
+class Course(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="course-file", blank=True, null=True)
+    image = models.FileField(upload_to="course-file", blank=True, null=True)
+    title = models.CharField(max_length=200)
+    description = models.TextChoices(null=True, blank=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    language = models.CharField(choices=LANGUAGE, default="English")
+    level = models.CharField(choices=LEVEL, default="Beginner")
+    platform_status = models.CharField(choices=PLATFORM_STATUS, default="Published")
+    teacher_status = models.CharField(choices=TEACHER_STATUS, default="Pusblished")
+    featured = models.BooleanField(default=False)
+    course_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    date = models.DateField(default=timezone.now)
+    
+    def __str__(self):
+        return self.title
     
     def save(self, *args, **kwargs):
         if self.slug == "" or self.slug == None:
