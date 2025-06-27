@@ -24,6 +24,12 @@ TEACHER_STATUS = (
     ("Published", "Published"),
 )
 
+PAYMENT_STATUS = (
+    ("Paid", "Paid"),
+    ("Processing", "Processing"),
+    ("Failed", "Failed"),
+)
+
 PLATFORM_STATUS = (
     ("Review", "Review"),
     ("Disabled", "Disabled"),
@@ -229,6 +235,28 @@ class CartOrder(models.Model):
         
     def order_items(self):
         return CartOrderItem.objects.filter(order=self)
+    
+    def __str__(self):
+        return self.oid
+    
+class CartOrderItme(models.Model):
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE, related_name="orderitem")
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="order_item")
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    tax_fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    intial_total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    saved = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    coupons = models.ManyToManyField("api.Coupon", blank=True)
+    applied_coupon = models.BooleanField(default=False)
+    oid = models.CharField(max_length=150, null=True, blank=True)
+    date = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        ordering = ['-date']
+        
+    def order_items(self):
+        return f"{self.order.payment_status}"
     
     def __str__(self):
         return self.oid
