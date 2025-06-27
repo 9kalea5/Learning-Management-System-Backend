@@ -208,3 +208,27 @@ class Cart(models.Model):
     
     def __str__(self):
         return self.course.title
+    
+class CartOrder(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    teachers = models.ManyToManyField(Teacher, blank=True)
+    sub_total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    tax_fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    payment_status = models.CharField(choices=PAYMENT_STATUS, default="Processing")
+    full_name = models.CharField(max_length=150, null=True, blank=True)
+    email = models.CharField(max_length=150, null=True, blank=True)
+    country = models.CharField(max_length=150, null=True, blank=True)
+    coupons = models.ManyToManyField("api.Coupon", blank=True)
+    stripe_session_id = models.CharField(max_length=150, null=True, blank=True)
+    oid = models.CharField(max_length=150, null=True, blank=True)
+    date = models.DateTimeField(default=timezone.now)
+    
+    class Meta:
+        ordering = ['-date']
+        
+    def order_items(self):
+        return CartOrderItem.objects.filter(order=self)
+    
+    def __str__(self):
+        return self.oid
