@@ -356,3 +356,14 @@ class Notification(models.Model):
     
     def __str__(self):
         return self.title
+    
+class Coupon(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True)
+    used_by = models.ManyToManyField(CustomUser, blank=True)
+    code = models.CharField(max_length=50)
+    discount = models.IntegerField(default=1)
+    active = models.BooleanField(default=False)
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.code
