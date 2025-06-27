@@ -307,3 +307,14 @@ class EnrolledCourse(models.Model):
     
     def review(self):
         return Review.objects.filter(course=self.course, user=self.user).first()
+    
+class Note(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=1000)
+    note = models.TextField()
+    note_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.title
