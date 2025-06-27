@@ -39,6 +39,15 @@ PLATFORM_STATUS = (
     
 )
 
+RATING = (
+    (1, "1 Star"),
+    (2, "2 Star"),
+    (3, "3 Star"),
+    (4, "4 Star"),
+    (5, "5 Star"),
+    
+)
+
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     image = models.FieldFile(uploadto_to="course-file", blank=True, null=True, default="default.jpg")
@@ -318,3 +327,18 @@ class Note(models.Model):
     
     def __str__(self):
         return self.title
+    
+class Review(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    review = models.TextField()
+    rating = models.IntegerField(choices=RATING, default=None)
+    repy = models.CharField(null=True, blank=True, max_length=1000)
+    active = models.BooleanField(default=False)
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.course.title
+    
+    def profile(self):
+        return Profile.objects.get(user=self.user)
