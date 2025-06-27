@@ -278,3 +278,32 @@ class CompletedLesson(models.Model):
     
     def __str__(self):
         return self.course.title
+    
+class EnrolledCourse(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True)
+    order_item = models.ForeignKey(CartOrderItem, on_delete=models.CASCADE)
+    enrollment_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.course.title
+    
+    def lectures(self):
+        return VariantItem.objects.filter(variant__course=self.course)
+    
+    def completed_lesson(self):
+        return CompletedLesson.objects.filter(course=self.course, user=self.user)
+    
+    def curriculum(self):
+        return Variant.objects.filter(course=self.course)
+
+    def note(self):
+        return Note.objects.filter(course=self.course, user=self.user)
+    
+    def question_answer(self):
+        return Question_Answer.objects.filter(course=self.course)
+    
+    def review(self):
+        return Review.objects.filter(course=self.course, user=self.user).first()
