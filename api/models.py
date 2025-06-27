@@ -260,3 +260,12 @@ class CartOrderItem(models.Model):
     
     def __str__(self):
         return self.oid
+    
+class Certificate(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignObject(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    variant_item = models.ForeignKey(VariantItem, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.course.title
