@@ -195,3 +195,16 @@ class Question_Answer_Message(models.Model):
     
     def profile(self):
         return Profile.objects.get(user=self.user)
+    
+class Cart(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignObject(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    price = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    tax_fee = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    country = models.CharField(max_length=150, null=True, blank=True)
+    cart_id = ShortUUIDField(unique=True, length=6, max_length=20, alphabet="1234567890")
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.course.title
