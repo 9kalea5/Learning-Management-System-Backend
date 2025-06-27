@@ -342,3 +342,17 @@ class Review(models.Model):
     
     def profile(self):
         return Profile.objects.get(user=self.user)
+    
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.ForeignKey(CartOrder, on_delete=models.CASCADE, related_name="orderitem")
+    order_item = models.ForeignKey(CartOrderItem, on_delete=models.CASCADE)
+    review = models.TextField()
+    type = models.CharField(max_length=150, choices=NOTI_TYPE)
+    active = models.BooleanField(default=False)
+    seen = models.BooleanField(default=False)
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.title
