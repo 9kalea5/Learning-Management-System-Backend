@@ -269,3 +269,12 @@ class Certificate(models.Model):
     
     def __str__(self):
         return self.course.title
+    
+class CompletedLesson(models.Model):
+    course = models.ForeignKey
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    variant_item = models.ForeignKey(VariantItem, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return self.course.title
