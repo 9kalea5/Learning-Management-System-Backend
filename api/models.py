@@ -239,7 +239,7 @@ class CartOrder(models.Model):
     def __str__(self):
         return self.oid
     
-class CartOrderItme(models.Model):
+class CartOrderItem(models.Model):
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE, related_name="orderitem")
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="order_item")
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
