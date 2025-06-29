@@ -145,3 +145,7 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
         model = api_models.EnrolledCourse
         fields = '__all__'
         
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Note
+        fields = '__all__'
