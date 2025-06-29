@@ -133,3 +133,10 @@ class CompletedLessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.CompletedLesson
         fields = '__all__'
+
+class EnrolledCourseSerializer(serializers.ModelSerializer):
+    completed_lesson = CompletedLessonSerializer(many=True, read_only=True, source='completed_lesson')
+
+    class Meta:
+        model = api_models.EnrolledCourse
+        fields = '__all__'
