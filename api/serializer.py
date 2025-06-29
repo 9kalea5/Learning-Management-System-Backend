@@ -128,3 +128,8 @@ class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Certificate
         fields = '__all__'
+        
+class CompletedLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.CompletedLesson
+        fields = '__all__'
