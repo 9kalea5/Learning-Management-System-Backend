@@ -154,3 +154,8 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Review
         fields = '__all__'
+        
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Notification
+        fields = '__all__'
