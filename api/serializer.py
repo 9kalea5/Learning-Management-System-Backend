@@ -82,17 +82,20 @@ class VariantSerializer(serializers.ModelSerializer):
     def get_variant_items(self, obj):
         items = obj.variant_items()
         return VariantItemSerializer(items, many=True).data
-        
-class Question_AnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.Question_Answer
-        fields = '__all__'
-        
+
 class Question_Answer_MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Question_Answer_Message
         fields = '__all__'
-        
+               
+class Question_AnswerSerializer(serializers.ModelSerializer):
+    messages = Question_Answer_MessageSerializer(many=True)
+    profile = ProfileSerializer(many=False)
+    
+    class Meta:
+        model = api_models.Question_Answer
+        fields = '__all__'
+
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Cart
