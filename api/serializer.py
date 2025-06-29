@@ -149,3 +149,8 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Note
         fields = '__all__'
+        
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Review
+        fields = '__all__'
