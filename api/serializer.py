@@ -68,10 +68,9 @@ class TeacherSerializer(serializers.ModelSerializer):
                   'courses', 'review',]
         
 class CourseSerializer(serializers.ModelSerializer):
-    students = None
-    curriculum = None
-    lectures = None
-    teacher = None
+    students = EnrolledCourseSerializer(many=True)
+    curriculum = VariantItemSerializer(many=True)
+    lectures = VariantItemSerializer(many=True)
     
     class Meta:
         model = api_models.Course
