@@ -55,7 +55,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Category
-        fields = '__all__'
+        fields = ['title', 'image', 'slug', 'course_count']
         
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
@@ -140,3 +140,4 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.EnrolledCourse
         fields = '__all__'
+        
