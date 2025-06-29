@@ -159,3 +159,8 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Notification
         fields = '__all__'
+        
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Coupon
+        fields = '__all__'
