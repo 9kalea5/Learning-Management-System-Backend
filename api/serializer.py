@@ -93,3 +93,8 @@ class CourseSerializer(serializers.ModelSerializer):
             "rating_count",
             "reviews",
         ]
+        
+class VariantItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.VariantItem
+        fields = '__all__'
