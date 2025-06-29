@@ -118,3 +118,8 @@ class CartOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.CartOrder
         fields = '__all__'
+        
+class CartOrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.CartOrderItem
+        fields = '__all__'
