@@ -102,17 +102,19 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Cart
         fields = '__all__'
-        
-class CartOrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.CartOrder
-        fields = '__all__'
-        
+
 class CartOrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.CartOrderItem
         fields = '__all__'
-        
+
+class CartOrderSerializer(serializers.ModelSerializer):
+    order_items = CartOrderItemSerializer(many=True)
+
+    class Meta:
+        model = api_models.CartOrder
+        fields = '__all__'
+
 class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Certificate
