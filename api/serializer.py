@@ -60,7 +60,12 @@ class CategorySerializer(serializers.ModelSerializer):
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Teacher
-        fields = '__all__'
+        fields = ['user', 'image',
+                  'full_name', 'bio',
+                  'facebook', 'twitter',
+                  'linkedin', 'about',
+                  'country','students',
+                  'courses', 'review',]
         
 class CourseSerializer(serializers.ModelSerializer):
     students = None
