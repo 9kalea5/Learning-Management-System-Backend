@@ -98,3 +98,8 @@ class VariantItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.VariantItem
         fields = '__all__'
+        
+class Question_AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Question_Answer
+        fields = '__all__'
