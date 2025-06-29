@@ -56,3 +56,8 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Category
         fields = '__all__'
+        
+class TeacherSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Teacher
+        fields = '__all__'
