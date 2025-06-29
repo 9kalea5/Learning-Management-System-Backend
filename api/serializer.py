@@ -108,3 +108,8 @@ class Question_Answer_MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Question_Answer_Message
         fields = '__all__'
+        
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Cart
+        fields = '__all__'
