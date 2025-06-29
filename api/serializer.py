@@ -61,3 +61,35 @@ class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Teacher
         fields = '__all__'
+        
+class CourseSerializer(serializers.ModelSerializer):
+    students = None
+    curriculum = None
+    lectures = None
+    teacher = None
+    
+    class Meta:
+        model = api_models.Course
+        fields = [
+            "category",
+            "teacher",
+            "file",
+            "image",
+            "title",
+            "description",
+            "price",
+            "language",
+            "level",
+            "platform_status",
+            "teacher_course_status",
+            "featured",
+            "course_id",
+            "slug",
+            "date",
+            "students",
+            "curriculum",
+            "lectures",
+            "average_rating",
+            "rating_count",
+            "reviews",
+        ]
