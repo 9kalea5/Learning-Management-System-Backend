@@ -125,11 +125,38 @@ class CompletedLessonSerializer(serializers.ModelSerializer):
         model = api_models.CompletedLesson
         fields = '__all__'
 
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Note
+        fields = '__all__'
+        
+class ReviewSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(many=False)
+
+    class Meta:
+        model = api_models.Review
+        fields = '__all__'
+
 class EnrolledCourseSerializer(serializers.ModelSerializer):
+    lectures = VariantItemSerializer(many=True, read_only=True)
     completed_lesson = CompletedLessonSerializer(many=True, read_only=True, source='completed_lesson')
+    curriculum = VariantItemSerializer(many=True, read_only=True, source='completed_lesson')
+    note = NoteSerializer(many=True, read_only=True, source='completed_lesson')
+    question_answer = Question_AnswerSerializer(many=True, read_only=True, source='completed_lesson')
+    review = ReviewSerializer(many=True, read_only=True, source='completed_lesson')
 
     class Meta:
         model = api_models.EnrolledCourse
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Notification
+        fields = '__all__'
+        
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = api_models.Coupon
         fields = '__all__'
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -162,23 +189,3 @@ class CourseSerializer(serializers.ModelSerializer):
             "rating_count",
             "reviews",
         ]
-
-class NoteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.Note
-        fields = '__all__'
-        
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.Review
-        fields = '__all__'
-        
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.Notification
-        fields = '__all__'
-        
-class CouponSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = api_models.Coupon
-        fields = '__all__'
