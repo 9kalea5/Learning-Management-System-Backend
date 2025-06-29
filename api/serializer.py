@@ -66,42 +66,22 @@ class TeacherSerializer(serializers.ModelSerializer):
                   'linkedin', 'about',
                   'country','students',
                   'courses', 'review',]
-        
-class CourseSerializer(serializers.ModelSerializer):
-    students = EnrolledCourseSerializer(many=True)
-    curriculum = VariantItemSerializer(many=True)
-    lectures = VariantItemSerializer(many=True)
-    
-    class Meta:
-        model = api_models.Course
-        fields = [
-            "category",
-            "teacher",
-            "file",
-            "image",
-            "title",
-            "description",
-            "price",
-            "language",
-            "level",
-            "platform_status",
-            "teacher_course_status",
-            "featured",
-            "course_id",
-            "slug",
-            "date",
-            "students",
-            "curriculum",
-            "lectures",
-            "average_rating",
-            "rating_count",
-            "reviews",
-        ]
-        
+   
 class VariantItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.VariantItem
         fields = '__all__'
+        
+class VariantSerializer(serializers.ModelSerializer):
+    variant_items = serializers.SerializerMethodField()
+
+    class Meta:
+        model = api_models.Variant
+        fields = ['id', 'course', 'title', 'variant_id', 'date', 'variant_items']
+
+    def get_variant_items(self, obj):
+        items = obj.variant_items()
+        return VariantItemSerializer(items, many=True).data
         
 class Question_AnswerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -144,7 +124,38 @@ class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.EnrolledCourse
         fields = '__all__'
-        
+
+class CourseSerializer(serializers.ModelSerializer):
+    students = EnrolledCourseSerializer(many=True)
+    curriculum = VariantItemSerializer(many=True)
+    lectures = VariantItemSerializer(many=True)
+    
+    class Meta:
+        model = api_models.Course
+        fields = [
+            "category",
+            "teacher",
+            "file",
+            "image",
+            "title",
+            "description",
+            "price",
+            "language",
+            "level",
+            "platform_status",
+            "teacher_course_status",
+            "featured",
+            "course_id",
+            "slug",
+            "date",
+            "students",
+            "curriculum",
+            "lectures",
+            "average_rating",
+            "rating_count",
+            "reviews",
+        ]
+
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Note
