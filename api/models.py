@@ -83,7 +83,7 @@ class Teacher(models.Model):
 class Category(models.Model):
     title = models.CharField(max_length=100)
     image = models.FileField(upload_to="course-file/", blank=True, null=True, default="default.jpg")
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
     active = models.BooleanField(default=False)
     
     class Meta:
