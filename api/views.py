@@ -70,7 +70,7 @@ class CategoryListAPIView(generics.ListAPIView):
 class CourseListAPIView(generics.ListAPIView):
     queryset = api_models.Course.objects.filter(
         platform_status="Published",
-        teacher_course_statues="Published"
+        teacher_status="Published"
     )
     serializer_class = api_serializer.CourseSerializer
     permission_classes = [AllowAny]

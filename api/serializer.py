@@ -139,11 +139,11 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
     lectures = VariantItemSerializer(many=True, read_only=True)
-    completed_lesson = CompletedLessonSerializer(many=True, read_only=True, source='completed_lesson')
-    curriculum = VariantItemSerializer(many=True, read_only=True, source='completed_lesson')
-    note = NoteSerializer(many=True, read_only=True, source='completed_lesson')
-    question_answer = Question_AnswerSerializer(many=True, read_only=True, source='completed_lesson')
-    review = ReviewSerializer(many=True, read_only=True, source='completed_lesson')
+    completed_lesson = CompletedLessonSerializer(many=True, read_only=True)
+    curriculum = VariantItemSerializer(many=True, read_only=True, )
+    note = NoteSerializer(many=True, read_only=True)
+    question_answer = Question_AnswerSerializer(many=True, read_only=True)
+    review = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = api_models.EnrolledCourse
@@ -177,7 +177,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "language",
             "level",
             "platform_status",
-            "teacher_course_status",
+            "teacher_status",
             "featured",
             "course_id",
             "slug",
