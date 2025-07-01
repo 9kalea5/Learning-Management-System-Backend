@@ -1,6 +1,7 @@
 import random
 from django.shortcuts import render
 from core.models import CustomUser, Profile
+from api import models as api_models
 from api import serializer as api_serializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -18,7 +19,7 @@ class RegisterView(generics.CreateAPIView):
 def generate_otp(length=7):
     otp = ''.join([str(random.randint(0,9)) for _ in range(length)])
     return otp
-    
+
 class PasswordResetEmailVerifyApiView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     serializer_class = api_serializer.UserSerializer
@@ -59,3 +60,8 @@ class PasswordChangeAPIView(generics.CreateAPIView):
             return Response({"message": "Password Changed Successfully"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class CategoryListAPIView(generics.ListAPIView):
+    queryset = api_models.Category.objects.filter(active=True)
+    serializer_class = api_serializer.CategorySerializer
+    permission_classes = [AllowAny]
