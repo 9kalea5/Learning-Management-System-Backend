@@ -66,3 +66,11 @@ class CategoryListAPIView(generics.ListAPIView):
     queryset = api_models.Category.objects.filter(active=True)
     serializer_class = api_serializer.CategorySerializer
     permission_classes = [AllowAny]
+    
+class CourseListAPIView(generics.ListAPIView):
+    queryset = api_models.Course.objects.filter(
+        platform_status="Published",
+        teacher_course_statues="Published"
+    )
+    serializer_class = api_serializer.CourseSerializer
+    permission_classes = [AllowAny]
