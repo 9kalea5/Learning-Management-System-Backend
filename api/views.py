@@ -74,3 +74,13 @@ class CourseListAPIView(generics.ListAPIView):
     )
     serializer_class = api_serializer.CourseSerializer
     permission_classes = [AllowAny]
+    
+class CourseDetailAPIView(generics.RetrieveAPIView):
+    serializer_class = api_serializer.CourseSerializer
+    permission_classes = [AllowAny]
+    queryset = api_models.Course
+    
+    def get_object(self):
+        slug = self.kwargs['slug']
+        course = api_models.Course.objects.get(slug=slug, platform_status="Published", teacher_status="Published")
+        return course

@@ -11,5 +11,5 @@ urlpatterns = [
 
     path("course/category/", api_views.CategoryListAPIView.as_view()),
     path("course/course-list/", api_views.CourseListAPIView.as_view()),
-    
+    path("course/course-detail/<slug>/", api_views.CourseDetailAPIView.as_view()),
 ]
