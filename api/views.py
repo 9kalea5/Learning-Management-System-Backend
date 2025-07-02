@@ -84,3 +84,22 @@ class CourseDetailAPIView(generics.RetrieveAPIView):
         slug = self.kwargs['slug']
         course = api_models.Course.objects.get(slug=slug, platform_status="Published", teacher_status="Published")
         return course
+    
+class CartAPIView(generics.CreateAPIView):
+    queryset = api_models.Cart.objects.filter.all()
+    serializer_class = api_serializer.CartSerializer
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        course_id = request.data['course_id']
+        user_id = request.data['user_id']
+        price = request.data['price']
+        country_name = request.data['country_name']
+        cart_id = request.data['cart_id']
+        
+        course = api_models.Course.filter(id=course_id).first()
+        
+        if user_id != "undefined":
+            user = CustomUser.filter(id=course_id).first()
+        else:
+            user = None
