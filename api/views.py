@@ -1,4 +1,5 @@
 import random
+from decimal import Decimal
 from django.shortcuts import render
 from core.models import CustomUser, Profile
 from api import models as api_models
@@ -103,3 +104,43 @@ class CartAPIView(generics.CreateAPIView):
             user = CustomUser.filter(id=course_id).first()
         else:
             user = None
+            
+        try:
+            country_object = api_models.Country.objects.filter(name="country_name").first()
+            country = country_object.name
+        except:
+            country_object = None
+            country = "United States"
+            
+        if country_object:
+            tax_rate = country_object.tax_rate / 100
+        else:
+            tax_rate = 0
+            
+        cart = api_models.Cart.objects.filter(cart_id=cart_id, course=course).first()
+        
+        if cart:
+            cart.course = course
+            cart.user = user
+            cart.price = price
+            cart.tax_fee = Decimal(price) * Decimal(tax_rate)
+            cart.country = country
+            cart.cart_id = cart_id
+            cart.total = Decimal(cart.price) + Decimal(cart.tax_fee)
+            cart.save()
+            
+            return Response({"message": "Cart Successfully Updated"}, status=status.HTTP_200_OK)
+        
+        else:
+            cart = api_models.Cart()
+            
+            cart.course = course
+            cart.user = user
+            cart.price = price
+            cart.tax_fee = Decimal(price) * Decimal(tax_rate)
+            cart.country = country
+            cart.cart_id = cart_id
+            cart.total = Decimal(cart.price) + Decimal(cart.tax_fee)
+            cart.save()
+            
+            return Response({"message": "Cart Successfully Created"}, status=status.HTTP_201_CREATED)
