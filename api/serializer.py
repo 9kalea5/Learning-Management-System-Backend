@@ -136,6 +136,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.Review
         fields = '__all__'
+        
+class CountrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = '__all__'
+        model = api_models.Country
+
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
     lectures = VariantItemSerializer(many=True, read_only=True)
