@@ -163,4 +163,4 @@ class CartItemDeleteAPIView(generics.DestroyAPIView):
         cart_id = self.kwargs['cart_id']
         item_id = self.kwargs['item_id']
         
-        return api_models.Cart.objects.filter(cart_id=cart_id, item_id=item_id).first()
+        return api_models.Cart.objects.filter(cart_id=cart_id, id=item_id).first()
