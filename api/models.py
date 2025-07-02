@@ -386,3 +386,11 @@ class Wishlist(models.Model):
     
     def __str__(self):
         return self.code
+    
+class Country(models.Model):
+    name = models.CharField(max_length=100)
+    tax_rate = models.IntegerField(default=5)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
