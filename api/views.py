@@ -87,7 +87,7 @@ class CourseDetailAPIView(generics.RetrieveAPIView):
         return course
     
 class CartAPIView(generics.CreateAPIView):
-    queryset = api_models.Cart.objects.filter.all()
+    queryset = api_models.Cart.objects.filter().all()
     serializer_class = api_serializer.CartSerializer
     permission_classes = [AllowAny]
     
