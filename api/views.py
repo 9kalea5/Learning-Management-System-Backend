@@ -193,6 +193,8 @@ class CartStatsAPIView(generics.RetrieveAPIView):
             "total": total_total
         }
             
+        return Response(data)
+        
     def calculate_price(self, cart_item):
         return cart_item.price
     
