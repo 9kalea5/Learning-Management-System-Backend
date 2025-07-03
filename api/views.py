@@ -176,7 +176,7 @@ class CartStatsAPIView(generics.RetrieveAPIView):
         return queryset
     
     def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset
+        queryset = self.get_queryset()
         
         total_price = 0.00
         total_tax = 0.00
@@ -203,3 +203,60 @@ class CartStatsAPIView(generics.RetrieveAPIView):
     
     def calculate_total(self, cart_item):
         return cart_item.total
+
+class CreateOrderAPIView(generics.CreateAPIView):
+    serializer_class = api_serializer.CartOrderSerializer
+    permission_class = [AllowAny]
+    queryset = api_models.CartOrder.objects.all()
+    
+    def create(self, request, *args, **kwargs):
+        full_name = request.data['full_name']
+        email = request.data['email']
+        country = request.data['country']
+        cart_id = request.data['cart_id']
+        user_id = request.data['user_id']
+        
+        if user_id != 0:
+            user = CustomUser.objects.get(id=user_id)
+        else:
+            user = None
+            
+        cart_items = api_models.Cart.objects.filter(cart_id=cart_id)
+        
+        total_price = Decimal(0.00)
+        total_tax = Decimal(0.00)
+        total_initial_total = Decimal(0.00)
+        total_total = Decimal(0.00)
+        
+        order = api_models.CartOrder.objects.create(
+            full_name=full_name,
+            email=email,
+            country=country,
+            student=user
+        )
+        
+        for c in cart_items:
+            api_models.CartOrderItem.objects.create(
+                order=order,
+                course=c.course,
+                price=c.price,
+                tax_fee=c.tax_fee,
+                total=c.total,
+                initial_total=c.total,
+                teacher=c.course.teacher
+            )
+            
+            total_price += Decimal(c.price)
+            total_tax += Decimal(c.tax_fee)
+            total_initial_total += Decimal(c.total)
+            total_total += Decimal(c.total)
+            
+            order.teachers.add(c.course.teacher)
+            
+        order.sub_total = total_price
+        order.tax_fee = total_tax
+        order.initial_total = total_initial_total
+        order.total = total_total
+        order.save()
+        
+        return Response({"message": "Order Created Succcessfully"}, status=status.HTTP_201_CREATED)
