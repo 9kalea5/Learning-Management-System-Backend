@@ -264,4 +264,5 @@ class CreateOrderAPIView(generics.CreateAPIView):
 class CheckoutAPIView(generics.RetrieveAPIView):
     serializer_class = api_serializer.CartOrderSerializer
     permission_classes = [AllowAny]
-    lookup_field = 'order_oid'
+    queryset = api_models.CartOrder.objects.all()
+    lookup_field = 'oid'
