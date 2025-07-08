@@ -137,6 +137,19 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = api_models.Review
         fields = '__all__'
         
+class WishlistSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = api_models.Wishlist
+
+    def __init__(self, *args, **kwargs):
+        super(WishlistSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
+        
 class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
