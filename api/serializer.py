@@ -100,8 +100,17 @@ class Question_AnswerSerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
-        model = api_models.Cart
         fields = '__all__'
+        model = api_models.Cart
+
+    def __init__(self, *args, **kwargs):
+        super(CartSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
+
 
 class CartOrderItemSerializer(serializers.ModelSerializer):
     class Meta:
