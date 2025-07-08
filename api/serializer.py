@@ -73,15 +73,21 @@ class VariantItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class VariantSerializer(serializers.ModelSerializer):
-    variant_items = serializers.SerializerMethodField()
-
+    variant_items = VariantItemSerializer(many=True)
+    items = VariantItemSerializer(many=True)
+   
     class Meta:
+        fields = '__all__'
         model = api_models.Variant
-        fields = ['id', 'course', 'title', 'variant_id', 'date', 'variant_items']
 
-    def get_variant_items(self, obj):
-        items = obj.variant_items()
-        return VariantItemSerializer(items, many=True).data
+
+    def __init__(self, *args, **kwargs):
+        super(VariantSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
 
 class Question_Answer_MessageSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer(many=False)
