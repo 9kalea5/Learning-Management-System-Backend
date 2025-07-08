@@ -110,10 +110,19 @@ class CartOrderItemSerializer(serializers.ModelSerializer):
 
 class CartOrderSerializer(serializers.ModelSerializer):
     order_items = CartOrderItemSerializer(many=True)
-
+    
     class Meta:
-        model = api_models.CartOrder
         fields = '__all__'
+        model = api_models.CartOrder
+
+
+    def __init__(self, *args, **kwargs):
+        super(CartOrderSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
 
 class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -124,6 +133,14 @@ class CompletedLessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = api_models.CompletedLesson
         fields = '__all__'
+        
+        def __init__(self, *args, **kwargs):
+            super(CompletedLessonSerializer, self).__init__(*args, **kwargs)
+            request = self.context.get("request")
+            if request and request.method == "POST":
+                self.Meta.depth = 0
+            else:
+                self.Meta.depth = 3
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
