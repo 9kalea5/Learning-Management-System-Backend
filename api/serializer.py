@@ -69,8 +69,17 @@ class TeacherSerializer(serializers.ModelSerializer):
    
 class VariantItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = api_models.VariantItem
         fields = '__all__'
+        model = api_models.VariantItem
+
+    
+    def __init__(self, *args, **kwargs):
+        super(VariantItemSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.method == "POST":
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
         
 class VariantSerializer(serializers.ModelSerializer):
     variant_items = VariantItemSerializer(many=True)
