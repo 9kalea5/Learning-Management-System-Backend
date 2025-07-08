@@ -310,7 +310,7 @@ class StudentSummaryAPIView(generics.ListAPIView):
         
         def get_queryset(self):
             user_id = self.kwargs['user_id']
-            user = User.objects.get(id=user)        
+            user = CustomUser.objects.get(id=user)        
             
             total_courses = api_models.EnrolledCourse.objects.filter(user=user).count()
             completed_lessons = api_models.CompletedLesson.objects.filter(user=user).count()
