@@ -19,4 +19,6 @@ urlpatterns = [
     path("order/create-order/", api_views.CreateOrderAPIView.as_view()),
     path("order/check_out/<oid>/", api_views.CheckoutAPIView.as_view()),
     path("order/coupon/", api_views.CouponApplyAPIView.as_view()),
+    path("student/summary/<user_Id/", api_views.StudentSummaryAPIView.as_view()),
+    
 ]
