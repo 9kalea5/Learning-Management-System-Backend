@@ -478,7 +478,7 @@ class StudentRateDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         user = CustomUser.objects.get(id=user_id)
         return api_models.Review.objects.get(id=review_id, user=user)
     
-class StudentWieshListListCreateAPIView(generics.ListCreateAPIView):
+class StudentWishListListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = api_serializer.WishlistSerializer
     permission_classes = [AllowAny]
     
