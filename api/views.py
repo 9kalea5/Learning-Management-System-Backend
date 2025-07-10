@@ -1,6 +1,7 @@
 import random
 from decimal import Decimal
 from django.shortcuts import render
+from django.contrib.auth.hashers import check_password
 from core.models import CustomUser, Profile
 from api import models as api_models
 from api import serializer as api_serializer
@@ -63,6 +64,26 @@ class PasswordChangeAPIView(generics.CreateAPIView):
         else:
             return Response({"message": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
         
+class ChangePasswordAPIView(generics.CreateAPIView):
+    serializer_class = api_serializer.UserSerializer
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        user_id = request.data['user_id']
+        old_password = request.data['old_password']
+        new_password = request.data['new_password']
+        
+        user = CustomUser.objects.get(id=user_id)
+        if user is not None:
+            if check_password(old_password, user.password):
+                user.set_password(new_password)
+                user.save()
+                return Response({"message": "Password changed successfully", "icon": "success"})
+            else:
+                return Response({"message": "Old password is incorrect", "icon": "warning"})
+        else:
+            return Response({"message": "User does not exists", "icon": "error"})
+        
 class ProfileAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = api_serializer.ProfileSerializer
     permission_classes = [AllowAny]
@@ -70,7 +91,7 @@ class ProfileAPIView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         try:
             user_id = self.kwargs['user_id']
-            user = User.objects.get(id=user_id)
+            user = CustomUser.objects.get(id=user_id)
             return Profile.objects.get(user=user)
         except:
             return None
