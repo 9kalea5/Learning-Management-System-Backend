@@ -422,7 +422,7 @@ class StudentNoteCreateAPIView(generics.CreateAPIView):
         
         return Response({"message": "Note created successfully"}, status=status.HTTP_201_CREATED)
     
-class SudentNoteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class StudentNoteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = api_serializer.NoteSerializer
     permission_classes = [AllowAny]
     
