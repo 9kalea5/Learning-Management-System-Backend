@@ -457,3 +457,14 @@ class StudentRateCourseAPIView(generics.CreateAPIView):
         )
         
         return Response({"message": "Review created successfully"}, status=status.HTTP_201_CREATED)
+
+class StudentRateDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = api_serializer.ReviewSerializer
+    permission_classes = [AllowAny]
+    
+    def get_object(self):
+        user_id = self.kwargs['user_id']
+        review_id = self.kwargs['review_id']
+        
+        user = CustomUser.objects.get(id=user_id)
+        return api_models.Review.objects.get(id=review_id, user=user)
