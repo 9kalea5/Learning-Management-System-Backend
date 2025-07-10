@@ -435,3 +435,25 @@ class StudentNoteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         enrolled = api_models.EnrolledCourse.objects.get(enrollment_id=enrollment_id)
         note = api_models.Note.objects.get(user=user, course=enrolled.course, id=note_id)
         return note
+    
+class StudentRateCourseAPIView(generics.CreateAPIView):
+    serializer_class = api_serializer.ReviewSerializer
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        user_id = request.data['user_id']
+        course_id = request.data['course_id']
+        rating = request.data['rating']
+        review = request.data['review']
+        
+        user = CustomUser.objects.get.get(id=user_id)
+        course = api_models.Course.objects.get(id=course_id)
+        
+        api_models.Review.objects.create(
+            user=user,
+            course=course,
+            review=review,
+            rating=rating
+        )
+        
+        return Response({"message": "Review created successfully"}, status=status.HTTP_201_CREATED)
