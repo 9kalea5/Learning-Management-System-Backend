@@ -404,3 +404,20 @@ class StudentCourseCompletedCreateAPIView(generics.CreateAPIView):
         else:
             api_models.CompletedLesson.objects.create(user=user, course=course, variant_item=variant_item)
             return Response({"message": "Course marked as completed"})
+        
+class StudentCreateAPIView(generics.CreateAPIView):
+    serializer_class =api_serializer.NoteSerializer
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        user_id =request.data['user_id']
+        enrollment_id = request.data['enrollment_id']
+        title = request.data['title']
+        note = request.data['note']
+        
+        user = CustomUser.objects.get(id=user_id)
+        enrolled = api_models.EnrolledCourse.objects.get(enrollment_id=enrollment_id)
+        
+        api_models.Note.objects.create(user=user, course=enrolled.course, note=note, title=title)
+        
+        return Response({"message": "Note created successfully"}, status=status.HTTP_201_CREATED)
