@@ -23,4 +23,5 @@ urlpatterns = [
     path("student/summary/<user_Id/", api_views.StudentSummaryAPIView.as_view()),
     path("student/course-list/<user-id>/", api_views.StudentCourseListAPIView.as_view()),
     path("student/course-list/<user-id>/<enrolment_id>/", api_views.StudentCourseDetailAPIView.as_view()),
+    path("student/course-completed/", api_views.StudentCourseCompletedCreateAPIView.as_view()),  
 ]
