@@ -505,3 +505,28 @@ class StudentWishListListCreateAPIView(generics.ListCreateAPIView):
             )
             
             return Response({"message": "Wishlist created"}, status=status.HTTP_201_CREATED)
+        
+class QuestionListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = api_serializer.Question_AnswerSerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        course_id = self.kwargs['course_id']
+        course = CustomUser.objects.get(id=course_id)
+        return api_models.Wishlist.objects.filter(course=course)
+    
+    def create(self, request, *args, **kwargs):
+        user_id = request.data['user_id']
+        course_id = request.data['course_id']
+        title = request.data['title']
+        message = request.data['message']
+        
+        user = CustomUser.objects.get(id=user_id)
+        course = api_models.Course.objects.get(id=course_id)
+        
+        question = api_models.Question_Answer.objects.create(user=user, course=course, title=title)
+        
+        api_models.Question_Answer_Message.objects.create(user=user, course=course, message=message, question=question)
+        
+        return Response({"message": "Group conversation started"}, status=status.HTTP_201_CREATED)
+        
