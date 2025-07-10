@@ -426,6 +426,15 @@ class StudentNoteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = api_serializer.NoteSerializer
     permission_classes = [AllowAny]
     
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        enrollment_id = self.kwargs['enrollment_id']
+        
+        user = CustomUser.objects.get(id=user_id)
+        enrolled = api_models.EnrolledCourse.objects.get(enrollment_id=enrollment_id)
+        
+        return api_models.Note.objects.filter(user=user, course=enrolled.course)
+        
     def get_object(self):
         user_id = self.kwargs['user_id']
         enrollment_id = self.kwargs['enrollment_id']
