@@ -63,6 +63,18 @@ class PasswordChangeAPIView(generics.CreateAPIView):
         else:
             return Response({"message": "User Not Found"}, status=status.HTTP_404_NOT_FOUND)
         
+class ProfileAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = api_serializer.ProfileSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        try:
+            user_id = self.kwargs['user_id']
+            user = User.objects.get(id=user_id)
+            return Profile.objects.get(user=user)
+        except:
+            return None
+        
 class CategoryListAPIView(generics.ListAPIView):
     queryset = api_models.Category.objects.filter(active=True)
     serializer_class = api_serializer.CategorySerializer
