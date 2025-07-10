@@ -405,7 +405,7 @@ class StudentCourseCompletedCreateAPIView(generics.CreateAPIView):
             api_models.CompletedLesson.objects.create(user=user, course=course, variant_item=variant_item)
             return Response({"message": "Course marked as completed"})
         
-class StudentCreateAPIView(generics.CreateAPIView):
+class StudentNoteCreateAPIView(generics.CreateAPIView):
     serializer_class =api_serializer.NoteSerializer
     permission_classes = [AllowAny]
     
