@@ -2,6 +2,7 @@ import random
 from decimal import Decimal
 from django.shortcuts import render
 from django.contrib.auth.hashers import check_password
+from django.db import models
 from core.models import CustomUser, Profile
 from api import models as api_models
 from api import serializer as api_serializer
@@ -10,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from datetime import datetime, timedelta
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = api_serializer.MyTokenPairSerializer
@@ -550,3 +552,54 @@ class QuestionAnserMessageSendAPIView(generics.CreateAPIView):
         
         question_serializer = api_serializer.Question_AnswerSerializer(question)
         return Response({"message": "Message Sent","question": question_serializer})
+    
+class TeacherSummaryAPIView(generics.ListAPIView):
+    serializer_class = api_serializer.TeacherSummarySerializer
+    permission_classes = [AllowAny]
+    
+    def get_queryset(self):
+        teacher_id = self.kwargs['teacher_id']
+        teacher = api_models.Teacher.objects.get(id=teacher_id)
+
+        one_month_ago = datetime.today() - timedelta(days=28)
+
+        total_courses = api_models.Course.objects.filter(teacher=teacher).count()
+
+        total_revenue = api_models.CartOrderItem.objects.filter(
+            teacher=teacher,
+            order__payment_status="Paid"
+        ).aggregate(total=models.Sum("Price"))['total'] or 0
+
+        monthly_revenue = api_models.CartOrderItem.objects.filter(
+            teacher=teacher,
+            order__payment_status="Paid",
+            date__gte=one_month_ago
+        ).aggregate(total=models.Sum("Price"))['total'] or 0
+
+        enrolled_courses = api_models.EnrolledCourse.objects.filter(teacher=teacher)
+        unique_student_ids = set()
+        students = []
+
+        for course in enrolled_courses:
+            if course.user_id not in unique_student_ids:
+                user = CustomUser.objects.get(id=course.user_id)
+                students.append({
+                    "full_name": user.profile.full_name,
+                    "image": user.profile.image.url if user.profile.image else None,
+                    "country": user.profile.country,
+                    "date": user.profile.date,
+                })
+                unique_student_ids.add(course.user_id)
+
+        return [{
+            "total_courses": total_courses,
+            "total_revenue": total_revenue,
+            "monthly_revenue": monthly_revenue,
+            "total_students": len(students),
+        }]
+
+        
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
